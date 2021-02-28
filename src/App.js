@@ -1,25 +1,27 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Corona from './pages/Corona';
+import DataMahasiswa from './pages/DataMahasiswa';
+import Todo from './pages/Todo';
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <div>
+          <Switch>
+            <Route path='/' exact component={Home} />
+            <Route path='/corona' component={Corona} />
+            <Route path='/data-mahasiswa' component={DataMahasiswa} />
+            <Route path='/todo' component={Todo} />
+          </Switch>
+        </div>
+      </div>
+    )
+  }
 }
 
 export default App;
