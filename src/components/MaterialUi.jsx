@@ -1,6 +1,6 @@
 export const styles = () => ({
   root: {
-    minWidth: 275,
+    minWidth: 345,
     backgroundColor: "red",
   },
   bullet: {
@@ -16,10 +16,6 @@ export const styles = () => ({
   },
   media: {
     height: 0,
-    paddingTop: "56.25%", // 16:9
+    paddingTop: "100%", // 16:9
   },
 });
-
-export const coba = () => {
-  return "coba";
-};

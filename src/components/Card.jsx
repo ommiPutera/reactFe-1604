@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
+import { styles } from "../components/MaterialUi";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { styles } from "../components/MaterialUi";
 import { AiTwotoneEdit } from "react-icons/ai";
 import { BiTrash } from "react-icons/bi";
 import { BsFillHeartFill } from "react-icons/bs"
@@ -17,7 +17,7 @@ class Cardcomp extends Component {
   };
 
   changeColor = () => {
-    if(this.state.color){
+    if (this.state.color) {
       this.setState({ color: "" })
     } else {
       this.setState({ color: "red" })
@@ -28,23 +28,19 @@ class Cardcomp extends Component {
     const { classes } = this.props;
     return (
       <div>
-        <Card style={{ backgroundColor: "white" }} variant="outlined">
+        <Card style={{ backgroundColor: "white", height: '500px'}} variant="outlined" >
           <CardMedia
             className={classes.media}
             image={this.props.foto}
             title="Paella dish"
           />
           <CardContent>
-            <Typography variant="h5" component="h2">
-              {this.props.judul}
-            </Typography>
-
-            <Typography variant="body2" color="textSecondary" component="p" style={{ marginTop: '10px' }}>
+            <Typography variant="body2" color="textSecondary" component="p" style={{ fontSize: '15px' }}>
               {this.props.caption}
             </Typography>
           </CardContent>
-          <CardActions>
-            <IconButton onClick={this.changeColor} style={{color: this.state.color}}>
+          <CardActions >
+            <IconButton onClick={this.changeColor} style={{ color: this.state.color }}>
               <BsFillHeartFill />
             </IconButton>
             <IconButton onClick={this.props.onDelete}>

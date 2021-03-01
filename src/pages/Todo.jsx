@@ -1,149 +1,120 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
+import { TextField } from '@material-ui/core';
 import { styles } from "../components/MaterialUi";
 import Header from "../components/Header";
-import { BsPlusCircle } from "react-icons/bs";
+import { BsFillPlusSquareFill } from "react-icons/bs";
 import Card from "../components/Card";
 import ModalComp from "../components/Modal";
 import swal from 'sweetalert';
 import { ToastContainer, toast } from 'react-toastify';
+import Axios from "axios";
 
 class Todo extends Component {
   state = {
-    data: [
-      {
-        foto:
-          "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-        judul: "Makan makan",
-        caption: "makan teratur",
-      },
-      {
-        foto:
-          "https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/1800x1200_potassium_foods_other.jpg?resize=750px:*",
-        judul: "Makan makan",
-        caption: "makan teratur",
-      },
-    ],
+    posting: [],
     fotoInp: "",
-    judulInp: "",
     captionInp: "",
     indexEdit: -1,
     indexDelete: -1,
     EditData: {
       foto: "",
-      judul: "",
       caption: "",
+      id: 0,
     },
     modal: false,
     editModal: false,
   };
 
-  onAddModalClick = () => {
-    this.setState({ modal: true });
-  };
-
-  onCancelAddClick = () => {
-    this.setState({ modal: false });
-  };
-
-  onClickDelete = (index) => {
-    this.setState({ indexDelete: index });
-    swal({
-      title: "Anda yakin?",
-      text: "Data yang didelete akan dihapus permanen",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    })
-      .then((willDelete) => {
-        if (willDelete) {
-          swal("Data berhasil dihapus!", {
-            icon: "success",
-          });
-          const { data, indexDelete } = this.state;
-          let usersData = data;
-          usersData.splice(indexDelete, 1);
-          console.log(indexDelete)
-          this.setState({ data: usersData, indexDelete: -1 });
-        } else {
-          swal("Data gagal dihapus!");
-        }
+  componentDidMount() {
+    Axios
+      .get(`http://localhost:5000/posts`)
+      .then((res) => {
+        console.log(res);
+        this.setState({ posting: res.data });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("internal server error");
       });
   };
 
-  onEditClick = (index) => {
-    console.log(index);
+  onEditChange = (event) => {
     let EditData = this.state.EditData;
-    let data = this.state.data;
-    EditData = {
-      ...EditData,
-      foto: data[index].foto,
-      judul: data[index].judul,
-      caption: data[index].caption,
-    }
-    this.setState({ indexEdit: index, EditData, editModal: true });
+    EditData[event.target.name] = event.target.value;
+    this.setState({ EditData: EditData });
   }
-
-  onEditSaveClick = () => {
-    const { EditData, data, indexEdit } = this.state;
-    const { foto, judul, caption } = EditData;
-    if (foto && judul && caption) {
-      let dataEdit = {
-        foto: foto,
-        judul: judul,
-        caption: caption,
-      };
-      let dataUser = data;
-      dataUser.splice(indexEdit, 1, dataEdit);
-      this.setState({
-        foto: dataUser,
-        indexEdit: -1,
-        editModal: false,
-      })
-    } else {
-      this.setState({
-        EditData: {
-          foto: "",
-          judul: "",
-          caption: "",
-        },
-        indexEdit: -1,
-      })
-    }
-  }
-
   onEditCancelClick = () => {
     this.setState({
       EditData: {
         foto: "",
-        judul: "",
         caption: "",
       },
       indexEdit: -1,
       editModal: false,
     });
   }
-
-  onAddClick = () => {
-    const { fotoInp, judulInp, captionInp, data } = this.state;
-    if (fotoInp && judulInp && captionInp) {
-      let dataInp = {
-        foto: fotoInp,
-        judul: judulInp,
-        caption: captionInp,
+  onEditClick = (index) => {
+    console.log(index);
+    let EditData = this.state.EditData;
+    let posting = this.state.posting;
+    EditData = {
+      ...EditData,
+      id: posting[index].id,
+      foto: posting[index].foto,
+      caption: posting[index].caption,
+    }
+    this.setState({ indexEdit: index, EditData: EditData, editModal: true });
+  }
+  onEditSaveClick = () => {
+    const { EditData } = this.state;
+    const { foto, caption, id } = EditData;
+    if (foto && caption && id) {
+      let dataEdit = {
+        foto: foto,
+        caption: caption,
       };
-      let dataUsers = data;
-      dataUsers.push(dataInp);
-      this.setState({
-        data: dataUsers,
-        fotoInp: "",
-        judulInp: "",
-        captionInp: "",
-        modal: false,
-      })
+      Axios
+        .put(`http://localhost:5000/posts/${id}`, dataEdit)
+        .then((res1) => {
+          console.log(res1)
+          Axios
+            .get(`http://localhost:5000/posts`)
+            .then((res) => {
+              console.log(res)
+              this.setState({
+                posting: res.data,
+                indexEdit: -1,
+                editModal: false,
+              });
+              toast.success("Data berhasil diedit!", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+              });
+            })
+            .catch((err2) => {
+              console.log(err2)
+              toast.error("Internal server error")
+            });
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     } else {
-      toast.error("input harus diisi bro", {
-        position: "top-center",
+      this.setState({
+        EditData: {
+          foto: "",
+          caption: "",
+        },
+        indexEdit: -1,
+      })
+      toast.error("Data gagal diedit", {
+        position: "top-right",
         autoClose: 3000,
         hideProgressBar: true,
         closeOnClick: true,
@@ -158,18 +129,97 @@ class Todo extends Component {
     console.log(event);
     this.setState({ [event.target.name]: event.target.value });
   };
+  onAddModalClick = () => {
+    this.setState({ modal: true });
+  };
+  onCancelAddClick = () => {
+    this.setState({ modal: false });
+  };
+  onAddClick = () => {
+    const { fotoInp, captionInp } = this.state;
+    if (fotoInp && captionInp) {
+      let dataInp = {
+        foto: fotoInp,
+        caption: captionInp,
+      };
+      Axios
+        .post(`http://localhost:5000/posts`, dataInp)
+        .then((res1) => {
+          console.log(res1);
+          Axios
+            .get(`http://localhost:5000/posts`)
+            .then((res) => {
+              console.log(res);
+              this.setState({
+                posting: res.data,
+                fotoInp: "",
+                captionInp: "",
+                modal: false,
+              })
+            })
+            .catch((err1) => {
+              console.log(err1)
+            })
+        })
+        .catch((err) => {
+          console.log(err)
+          toast.error("Internal server error");
+        })
 
-  onEditChange = (event) => {
-    let EditData = this.state.EditData;
-    EditData[event.target.name] = event.target.value;
-    this.setState({ EditData: EditData });
+    } else {
+      toast.error("Data harus diisi", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   }
 
+  onClickDelete = (id) => {
+    Axios
+      .delete(`http://localhost:5000/posts/${id}`)
+      .then((res1) => {
+        console.log(res1)
+        Axios
+          .get(`http://localhost:5000/posts`)
+          .then((res) => {
+            console.log(res)
+            swal({
+              title: "Anda yakin?",
+              text: "Data akan dihapus permanen",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+              .then((willDelete) => {
+                if (willDelete) {
+                  swal("Data berhasil terhapus!", {
+                    icon: "success",
+                  });
+                  this.setState({ posting: res.data });
+                } else {
+                  swal("Data gagal terhapus!");
+                }
+              });
+          })
+          .catch((err1) => {
+            console.log(err1)
+          })
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  };
+
   renderCard = () => {
-    return this.state.data.map((val, index) => {
+    return this.state.posting.map((val, index) => {
       return (
-        <div className="col-md-3 col-sm-12 mt-5" key={index}>
-          <Card foto={val.foto} judul={val.judul} caption={val.caption} onDelete={() => this.onClickDelete(index)} onEdit={() => this.onEditClick(index)} />
+        <div className="col-md-3 mt-5" key={index}>
+          <Card foto={val.foto} caption={val.caption} onDelete={() => this.onClickDelete(val.id)} onEdit={() => this.onEditClick(index)} />
         </div>
       );
     });
@@ -195,21 +245,16 @@ class Todo extends Component {
               value={this.state.usernameInp}
               onChange={this.onInputChage}
             />
-            <input
-              name="judulInp"
-              type="text"
-              placeholder="Judul"
-              className="form-control my-2"
-              value={this.state.judulInp}
-              onChange={this.onInputChage}
-            />
-            <input
+            <TextField
               name="captionInp"
               type="text"
               placeholder="Caption"
               className="form-control my-2"
               value={this.state.captionInp}
               onChange={this.onInputChage}
+              multiline
+              rows={1}
+              rowsMax={2}
             />
           </ModalComp>
           <ModalComp
@@ -228,28 +273,22 @@ class Todo extends Component {
               value={this.state.EditData.foto}
               onChange={this.onEditChange}
             />
-            <input
-              name="judul"
-              type="text"
-              placeholder="Judul"
-              className="form-control my-2"
-              value={this.state.EditData.judul}
-              onChange={this.onEditChange}
-            />
-            <input
+            <TextField
               name="caption"
               type="text"
               placeholder="Caption"
               className="form-control my-2"
               value={this.state.EditData.caption}
               onChange={this.onEditChange}
+              multiline
+              rows={1}
+              rowsMax={2}
             />
           </ModalComp>
-          <div className="row d-flex justify-content-flex-start">{this.renderCard()}</div>
+          <div className="row d-flex justify-content-start">{this.renderCard()}</div>
           <div className=" mt-5 d-flex flex-column justify-content-center align-items-center">
-            <h2>Tambah Data</h2>
             <div className="mb-5">
-              <BsPlusCircle style={{ fontSize: "3em", fontWeight: "700" }} onClick={this.onAddModalClick} />
+              <BsFillPlusSquareFill style={{ fontSize: "2.5em", fontWeight: "700" }} onClick={this.onAddModalClick} />
             </div>
           </div>
         </div>

@@ -1,0 +1,50 @@
+{
+  "posts": [
+    {
+      "foto": "https://instagram.fcgk18-1.fna.fbcdn.net/v/t51.2885-15/e35/133726555_399308181288431_6128220237726482515_n.jpg?tp=1&_nc_ht=instagram.fcgk18-1.fna.fbcdn.net&_nc_cat=111&_nc_ohc=CX1DDfQrJ6EAX-DJRWa&oh=00e8ba8d650d93a94e4c77aa2a3e4761&oe=6067B53A",
+      "caption": "Lokasi/location: Labengki Island, Sulawesi Tenggara, Indonesia.",
+      "id": 1
+    },
+    {
+      "foto": "https://instagram.fcgk18-2.fna.fbcdn.net/v/t51.2885-15/e35/131940480_858632128286832_225917921767787257_n.jpg?tp=1&_nc_ht=instagram.fcgk18-2.fna.fbcdn.net&_nc_cat=100&_nc_ohc=uuVvRqwJVycAX_So73v&oh=ae4c44ca77a0705c42e86acc2ab42ae6&oe=606816E6",
+      "caption": "Barang siapa bersemangat dipagi hari, maka ia termasuk golongan yang beruntung",
+      "id": 2
+    },
+    {
+      "foto": "https://instagram.fcgk18-1.fna.fbcdn.net/v/t51.2885-15/e35/127925135_911314029275111_3933269282961214646_n.jpg?tp=1&_nc_ht=instagram.fcgk18-1.fna.fbcdn.net&_nc_cat=111&_nc_ohc=QrQcMLoolmwAX89wW5J&oh=c81a8c369dd93f4b6fe1ac2e52e42be4&oe=606716D4",
+      "caption": "Lembah Harau, Salah Satu Lembah Terindah di Indonesia",
+      "id": 3
+    }
+  ],
+  "comments": [],
+  "users": [
+    {
+      "id": 1,
+      "username": "dino",
+      "email": "dinorahman@ymail.com",
+      "role": "user",
+      "password": "1234"
+    },
+    {
+      "id": 2,
+      "username": "alghi",
+      "email": "alghi@google.com",
+      "role": "admin",
+      "password": "abcd"
+    },
+    {
+      "username": "willy",
+      "email": "qilly@gmail.com",
+      "role": "admin",
+      "password": "1234",
+      "id": 5
+    },
+    {
+      "username": "batmanrobinaa",
+      "email": "batmanas@gmail.com",
+      "role": "admin",
+      "password": "1234",
+      "id": 6
+    }
+  ]
+}
